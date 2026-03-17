@@ -97,25 +97,44 @@ class Captcha
      */
     public static function checkCaptcha(string $uuid, string|int $captcha): bool
     {
+        $code = static::getCaptchaCode($uuid, true);
+        if (strtolower($captcha) !== $code) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 按与登录校验完全一致的方式读取验证码。
+     * $consume 为 true 时会和登录校验一样读取后立即删除。
+     */
+    public static function getCaptchaCode(string $uuid, bool $consume = false): ?string
+    {
         $mode = config('plugin.saiadmin.saithink.captcha.mode', 'session');
         if ($mode === 'cache') {
             try {
                 $code = Cache::get($uuid);
-                Cache::delete($uuid);
+                if ($consume) {
+                    Cache::delete($uuid);
+                }
             } catch (\Exception $e) {
                 throw new ApiException($e->getMessage());
             }
         } else {
             try {
                 $code = session($uuid);
-                session()->forget($uuid);
+                if ($consume) {
+                    session()->forget($uuid);
+                }
             } catch (\Exception $e) {
                 throw new ApiException($e->getMessage());
             }
         }
-        if (strtolower($captcha) !== $code) {
-            return false;
+
+        if ($code === null || $code === false || $code === '') {
+            return null;
         }
-        return true;
+
+        return (string) $code;
     }
 }

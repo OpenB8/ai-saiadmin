@@ -1,4 +1,5 @@
 <?php
+
 return [
     // 默认缓存驱动
     'default' => env('CACHE_MODE', 'file'),
