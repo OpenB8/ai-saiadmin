@@ -1,0 +1,14 @@
+-- 数据库语句--
+
+{% for column in tables %}
+-- 菜单[{{column.menu_name}}] SQL
+INSERT INTO `sa_system_menu`(`parent_id`, `name`, `code`, `slug`, `type`, `path`, `component`, `icon`, `sort`, `is_iframe`, `is_keep_alive`, `is_hidden`, `is_fixed_tab`, `is_full_page`, `create_time`, `update_time`) VALUES ({{column.belong_menu_id}}, '{{column.menu_name}}', '{{column.namespace}}/{{column.package_name}}/{{column.business_name}}', '', 2, '{{column.package_name}}/{{column.business_name}}', '/plugin/{{column.namespace}}/{{column.package_name}}/{{column.business_name}}/index', 'ri:home-2-line', 100, 2, 2, 2, 2, 2, now(), now());
+
+SET @id := LAST_INSERT_ID();
+
+INSERT INTO `sa_system_menu`(`parent_id`, `name`, `slug`, `type`, `sort`, `is_iframe`, `is_keep_alive`, `is_hidden`, `is_fixed_tab`, `is_full_page`, `create_time`, `update_time`) VALUES (@id, '列表', '{{column.namespace}}:{{column.package_name}}:{{column.business_name}}:index', 3, 100, 2, 2, 2, 2, 2, now(), now());
+INSERT INTO `sa_system_menu`(`parent_id`, `name`, `slug`, `type`, `sort`, `is_iframe`, `is_keep_alive`, `is_hidden`, `is_fixed_tab`, `is_full_page`, `create_time`, `update_time`) VALUES (@id, '保存', '{{column.namespace}}:{{column.package_name}}:{{column.business_name}}:save', 3, 100, 2, 2, 2, 2, 2, now(), now());
+INSERT INTO `sa_system_menu`(`parent_id`, `name`, `slug`, `type`, `sort`, `is_iframe`, `is_keep_alive`, `is_hidden`, `is_fixed_tab`, `is_full_page`, `create_time`, `update_time`) VALUES (@id, '更新', '{{column.namespace}}:{{column.package_name}}:{{column.business_name}}:update', 3, 100, 2, 2, 2, 2, 2, now(), now());
+INSERT INTO `sa_system_menu`(`parent_id`, `name`, `slug`, `type`, `sort`, `is_iframe`, `is_keep_alive`, `is_hidden`, `is_fixed_tab`, `is_full_page`, `create_time`, `update_time`) VALUES (@id, '读取', '{{column.namespace}}:{{column.package_name}}:{{column.business_name}}:read', 3, 100, 2, 2, 2, 2, 2, now(), now());
+INSERT INTO `sa_system_menu`(`parent_id`, `name`, `slug`, `type`, `sort`, `is_iframe`, `is_keep_alive`, `is_hidden`, `is_fixed_tab`, `is_full_page`, `create_time`, `update_time`) VALUES (@id, '删除', '{{column.namespace}}:{{column.package_name}}:{{column.business_name}}:destroy', 3, 100, 2, 2, 2, 2, 2, now(), now());
+{% endfor %}
