@@ -28,7 +28,9 @@
     "workerman/webman-framework": "^2.1",
     "monolog/monolog": "^2.0",
     "saithink/saiadmin": "^6.0",
-    "saithink/saipackage": "^6.0"
+    "saithink/saipackage": "^6.0",
+    "luoyue/webman-mcp": "^0.4.0",
+    "symfony/uid": "^7.4"
   },
   "suggest": {
     "ext-event": "For better performance. "
@@ -53,5 +55,10 @@
     ]
   },
   "minimum-stability": "dev",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
+  }
 }

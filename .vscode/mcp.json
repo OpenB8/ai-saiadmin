@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "mcp": {
+      "command": "php",
+      "args": [
+        "server/webman",
+        "mcp:server",
+        "mcp"
+      ]
+    }
+  }
+}
