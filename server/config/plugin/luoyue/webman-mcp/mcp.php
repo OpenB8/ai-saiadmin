@@ -1,7 +1,7 @@
 <?php
 
+use app\mcp\BuiltinDevMcpLoader;
 use Luoyue\WebmanMcp\Event\WebmanEvent;
-use Luoyue\WebmanMcp\Server\DevelopmentMcpLoader;
 use Mcp\Schema\Enum\ProtocolVersion;
 use Mcp\Schema\Icon;
 use Mcp\Schema\ServerCapabilities;
@@ -44,9 +44,36 @@ return [
                 completions: true,
                 experimental: null,
             ));
-            // 添加开发环境工具，仅debug模式下启用
-            config('app.debug') && $server->addLoader(new DevelopmentMcpLoader);
+            // 添加内置开发工具，可总开关和单独开关控制
+            config('plugin.luoyue.webman-mcp.mcp.enable_default_dev_tools', config('app.debug'))
+                && $server->addLoader(new BuiltinDevMcpLoader(
+                    config('plugin.luoyue.webman-mcp.mcp.default_dev_tools', [])
+                ));
         },
+        // 是否启用插件内置开发工具总开关，例如 get_config、get_env、database_execute_sql 等
+        'enable_default_dev_tools' => config('app.debug'),
+        // 插件内置开发工具单独开关
+        'default_dev_tools' => [
+            'sequential_thinking' => config('app.debug'),
+            'system_info' => config('app.debug'),
+            'list_dependence' => config('app.debug'),
+            'list_extensions' => config('app.debug'),
+            'get_php_ini' => config('app.debug'),
+            'get_config' => config('app.debug'),
+            'list_routes' => config('app.debug'),
+            'match_routes' => config('app.debug'),
+            'list_events' => config('app.debug'),
+            'get_env' => config('app.debug'),
+            'eval_code' => config('app.debug'),
+            'build_phar' => config('app.debug'),
+            'build_bin' => config('app.debug'),
+            'database_connections' => config('app.debug'),
+            'database_execute_sql' => config('app.debug'),
+            'redis_connections' => config('app.debug'),
+            'redis_execute_raw' => config('app.debug'),
+            'redis_execute_lua' => config('app.debug'),
+            'redis_execute_lua_sha' => config('app.debug'),
+        ],
         // 服务日志，对应插件下的log配置文件，为空则不记录日志
         'logger' => null,
         // 服务注册配置
