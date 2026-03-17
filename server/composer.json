@@ -1,64 +1,65 @@
 {
-  "name": "workerman/webman",
-  "type": "project",
-  "keywords": [
-    "high performance",
-    "http service"
-  ],
-  "homepage": "https://www.workerman.net",
-  "license": "MIT",
-  "description": "High performance HTTP Service Framework.",
-  "authors": [
-    {
-      "name": "walkor",
-      "email": "walkor@workerman.net",
-      "homepage": "https://www.workerman.net",
-      "role": "Developer"
-    }
-  ],
-  "support": {
-    "email": "walkor@workerman.net",
-    "issues": "https://github.com/walkor/webman/issues",
-    "forum": "https://wenda.workerman.net/",
-    "wiki": "https://workerman.net/doc/webman",
-    "source": "https://github.com/walkor/webman"
-  },
-  "require": {
-    "php": ">=8.1",
-    "workerman/webman-framework": "^2.1",
-    "monolog/monolog": "^2.0",
-    "saithink/saiadmin": "^6.0",
-    "saithink/saipackage": "^6.0",
-    "luoyue/webman-mcp": "^0.4.0",
-    "symfony/uid": "^7.4"
-  },
-  "suggest": {
-    "ext-event": "For better performance. "
-  },
-  "autoload": {
-    "psr-4": {
-      "": "./",
-      "app\\": "./app",
-      "App\\": "./app",
-      "app\\View\\Components\\": "./app/view/components"
-    }
-  },
-  "scripts": {
-    "post-package-install": [
-      "support\\Plugin::install"
+    "name": "workerman/webman",
+    "type": "project",
+    "keywords": [
+        "high performance",
+        "http service"
     ],
-    "post-package-update": [
-      "support\\Plugin::install"
+    "homepage": "https://www.workerman.net",
+    "license": "MIT",
+    "description": "High performance HTTP Service Framework.",
+    "authors": [
+        {
+            "name": "walkor",
+            "email": "walkor@workerman.net",
+            "homepage": "https://www.workerman.net",
+            "role": "Developer"
+        }
     ],
-    "pre-package-uninstall": [
-      "support\\Plugin::uninstall"
-    ]
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "config": {
-    "allow-plugins": {
-      "php-http/discovery": true
+    "support": {
+        "email": "walkor@workerman.net",
+        "issues": "https://github.com/walkor/webman/issues",
+        "forum": "https://wenda.workerman.net/",
+        "wiki": "https://workerman.net/doc/webman",
+        "source": "https://github.com/walkor/webman"
+    },
+    "require": {
+        "php": ">=8.1",
+        "workerman/webman-framework": "^2.1",
+        "monolog/monolog": "^2.0",
+        "saithink/saiadmin": "^6.0",
+        "saithink/saipackage": "^6.0",
+        "luoyue/webman-mcp": "^0.4.0",
+        "symfony/uid": "^7.4",
+        "overtrue/easy-sms": "*"
+    },
+    "suggest": {
+        "ext-event": "For better performance. "
+    },
+    "autoload": {
+        "psr-4": {
+            "": "./",
+            "app\\": "./app",
+            "App\\": "./app",
+            "app\\View\\Components\\": "./app/view/components"
+        }
+    },
+    "scripts": {
+        "post-package-install": [
+            "support\\Plugin::install"
+        ],
+        "post-package-update": [
+            "support\\Plugin::install"
+        ],
+        "pre-package-uninstall": [
+            "support\\Plugin::uninstall"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
-  }
 }
