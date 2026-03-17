@@ -1,0 +1,5 @@
+[mcp_servers.webman_mcp]
+command = "php"
+args = ["server/webman", "mcp:server", "mcp"]
+startup_timeout_sec = 30
+
