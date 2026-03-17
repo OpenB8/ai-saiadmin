@@ -4,6 +4,9 @@
 // +----------------------------------------------------------------------
 // | Author: sai <1430792918@qq.com>
 // +----------------------------------------------------------------------
+
+use app\support\EnvResolver;
+
 return [
 
     'access_exp' => 8 * 60 * 60, // 登录token有效期，默认8小时
@@ -11,7 +14,7 @@ return [
 	// 验证码存储模式
     'captcha' => [
         // 验证码存储模式 session或者cache
-        'mode' => getenv('CAPTCHA_MODE'),
+        'mode' => EnvResolver::get('CAPTCHA_MODE', 'session'),
         // 验证码过期时间 (秒)
         'expire' => 300,
     ],

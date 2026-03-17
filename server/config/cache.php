@@ -1,7 +1,9 @@
 <?php
 
+use app\support\EnvResolver;
+
 return [
-    'default' => env('CACHE_MODE', 'file'),
+    'default' => EnvResolver::get('CACHE_MODE', 'file'),
     'stores' => [
         'file' => [
             'driver' => 'file',
