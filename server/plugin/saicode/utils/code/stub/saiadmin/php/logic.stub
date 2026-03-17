@@ -1,0 +1,175 @@
+<?php
+// +----------------------------------------------------------------------
+// | saiadmin [ saiadmin快速开发框架 ]
+// +----------------------------------------------------------------------
+// | Author: your name
+// +----------------------------------------------------------------------
+namespace {{namespace_start}}logic{{namespace_end}};
+
+{% if stub == 'eloquent' %}
+use plugin\saiadmin\basic\eloquent\BaseLogic;
+{% else %}
+use plugin\saiadmin\basic\think\BaseLogic;
+{% endif %}
+use plugin\saiadmin\exception\ApiException;
+use plugin\saiadmin\utils\Helper;
+use {{namespace_start_model}}model{{namespace_end}}\{{class_name}};
+{% if generate_menus | str_contains('export') %}
+use plugin\saiadmin\service\OpenSpoutWriter;
+{% endif %}
+{% if generate_menus | str_contains('import') %}
+use OpenSpout\Reader\XLSX\Reader;
+{% endif %}
+
+/**
+ * {{menu_name}}逻辑层
+ */
+class {{class_name}}Logic extends BaseLogic
+{
+    /**
+     * 构造函数
+     */
+    public function __construct()
+    {
+        $this->model = new {{class_name}}();
+    }
+
+{% if options.relations != null %}
+    /**
+     * 读取数据
+     * @param $id
+     * @return array
+     */
+    public function read($id): array
+    {
+        $admin = $this->model->find($id);
+        $data = $admin->toArray();
+{% for item in options.relations %}
+        $data['{{item.name}}'] = $admin->{{item.name}}->toArray() ?: [];
+{% endfor %}
+        return $data;
+    }
+
+{% endif %}
+{% if tpl_category == 'tree' %}
+    /**
+     * 修改数据
+     * @param $id
+     * @param $data
+     * @return mixed
+     */
+    public function edit($id, $data): mixed
+    {
+        if (!isset($data['{{options.tree_parent_id}}'])) {
+            $data['{{options.tree_parent_id}}'] = 0;
+        }
+        if ($data['{{options.tree_parent_id}}'] == $data['{{options.tree_id}}']) {
+            throw new ApiException('不能设置父级为自身');
+        }
+        return parent::edit($id, $data);
+    }
+
+    /**
+     * 删除数据
+     * @param $ids
+     */
+    public function destroy($ids): bool
+    {
+        $num = $this->model->whereIn('{{options.tree_parent_id}}', $ids)->count();
+        if ($num > 0) {
+            throw new ApiException('该分类下存在子分类，请先删除子分类');
+        } else {
+            return parent::destroy($ids);
+        }
+    }
+
+    /**
+     * 树形数据
+     */
+    public function tree($where)
+    {
+        $query = $this->search($where);
+        $request = request();
+        if ($request && $request->input('tree', 'false') === 'true') {
+{% if stub == 'eloquent' %}
+            $query->select('{{options.tree_id}}', '{{options.tree_id}} as value', '{{options.tree_name}} as label', '{{options.tree_parent_id}}');
+{% else %}
+            $query->field('{{options.tree_id}}, {{options.tree_id}} as value, {{options.tree_name}} as label, {{options.tree_parent_id}}');
+{% endif %}
+        }
+{% if options.relations != null %}
+        $query->with([
+{% for item in options.relations %}
+            '{{item.name}}',
+{% endfor %}
+        ]);
+{% endif %}
+        $data = $this->getAll($query);
+        return Helper::makeTree($data);
+    }
+
+{% endif %}
+{% if generate_menus | str_contains('import') %}
+    /**
+     * 导入数据
+     */
+    public function import($file)
+    {
+        $path = $this->getImport($file);
+        $reader = new Reader();
+        try {
+            $reader->open($path);
+            $data = [];
+            foreach ($reader->getSheetIterator() as $sheet) {
+                $isHeader = true;
+                foreach ($sheet->getRowIterator() as $row) {
+                    if ($isHeader) {
+                        $isHeader = false;
+                        continue;
+                    }
+                    $cells = $row->getCells();
+                    $data[] = [
+{% for column in export_columns %}
+                        '{{column.column_name}}' => $cells[{{loop.index0}}]->getValue(),
+{% endfor %}
+                    ];
+                }
+            }
+            $this->saveAll($data);
+        } catch (\Exception $e) {
+            throw new ApiException('导入文件错误，请上传正确的文件格式xlsx');
+        }
+    }
+
+{% endif %}
+{% if generate_menus | str_contains('export') %}
+    /**
+     * 导出数据
+     */
+    public function export($where = [])
+    {
+        $option = [
+{% for column in export_columns %}
+            ['field' => '{{column.column_name}}', 'title' => '{{column.column_comment}}', 'width' => 15],
+{% endfor %}
+        ];
+        $filter = [
+{% for column in export_columns %}
+{% if column.dict_type != '' %}
+            '{{column.column_name}}' => dictDataList('{{column.dict_type}}'),
+{% endif %}
+{% endfor %}
+        ]; // 过滤器
+        $query = $this->search($where)->field(array_column($option, 'field'));
+        $data = $this->getAll($query);
+        $file_name = '{{menu_name}}.xlsx';
+        $writer = new OpenSpoutWriter($file_name);
+        $writer->setWidth(array_column($option, 'width'));
+        $writer->setHeader(array_column($option, 'title'));
+        $writer->setData($data, null, $filter);
+        $file_path = $writer->returnFile();
+        return response()->download($file_path, urlencode($file_name));
+    }
+
+{% endif %}
+}

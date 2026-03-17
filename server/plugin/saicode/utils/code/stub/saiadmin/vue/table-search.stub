@@ -1,0 +1,207 @@
+<template>
+  <sa-search-bar
+    ref="searchBarRef"
+    v-model="formData"
+    label-width="100px"
+    :showExpand="{{query_column_count > 3 ? 'true' : 'false'}}"
+    @reset="handleReset"
+    @search="handleSearch"
+    @expand="handleExpand"
+  >
+{% set index = 0 %}
+{% for column in columns %}
+{% if column.is_query == 2 %}
+{% set index = index + 1 %}
+{% if column.query_component == 'input' %}
+    <el-col v-bind="setSpan({{column.query_span|default(6)}})"{% if index > 3 %} v-show="isExpanded"{% endif %}>
+      <el-form-item label="{{column.column_comment}}" prop="{{column.column_name}}">
+        <el-input v-model="formData.{{column.column_name}}" placeholder="请输入{{column.column_comment}}" clearable />
+      </el-form-item>
+    </el-col>
+{% endif %}
+{% if column.query_component == 'radio' %}
+    <el-col v-bind="setSpan({{column.query_span|default(6)}})"{% if index > 3 %} v-show="isExpanded"{% endif %}>
+      <el-form-item label="{{column.column_comment}}" prop="{{column.column_name}}">
+        <sa-radio v-model="formData.{{column.column_name}}" dict="{{column.query_dict}}" placeholder="请选择{{column.column_comment}}" clearable />
+      </el-form-item>
+    </el-col>
+{% endif %}
+{% if column.query_component == 'saSelect' %}
+    <el-col v-bind="setSpan({{column.query_span|default(6)}})"{% if index > 3 %} v-show="isExpanded"{% endif %}>
+      <el-form-item label="{{column.column_comment}}" prop="{{column.column_name}}">
+        <sa-select v-model="formData.{{column.column_name}}" dict="{{column.query_dict}}" placeholder="请选择{{column.column_comment}}" clearable />
+      </el-form-item>
+    </el-col>
+{% endif %}
+{% if column.query_component == 'select' %}
+    <el-col v-bind="setSpan({{column.query_span|default(6)}})"{% if index > 3 %} v-show="isExpanded"{% endif %}>
+      <el-form-item label="{{column.column_comment}}" prop="{{column.column_name}}">
+        <el-select
+          v-model="formData.{{column.column_name}}"
+          :options="optionData.{{column.column_name}}"
+          :props="{ label: '{{column.query_options.field_label|default('label')}}', value: '{{column.query_options.field_value|default('value')}}' }"
+          placeholder="请选择{{column.column_comment}}"
+          clearable
+        />
+      </el-form-item>
+    </el-col>
+{% endif %}
+{% if column.query_component == 'treeSelect' %}
+    <el-col v-bind="setSpan({{column.query_span|default(6)}})"{% if index > 3 %} v-show="isExpanded"{% endif %}>
+      <el-form-item label="{{column.column_comment}}" prop="{{column.column_name}}">
+        <el-tree-select
+          v-model="formData.{{column.column_name}}"
+          :data="optionData.{{column.column_name}}"
+          node-key="{{column.query_options.field_value|default('value')}}"
+          :props="{ label: '{{column.query_options.field_label|default('label')}}' }"
+          placeholder="请选择{{column.column_comment}}"
+          check-strictly
+          clearable
+        />
+      </el-form-item>
+    </el-col>
+{% endif %}
+{% if column.query_component == 'cascader' %}
+    <el-col v-bind="setSpan({{column.query_span|default(6)}})"{% if index > 3 %} v-show="isExpanded"{% endif %}>
+      <el-form-item label="{{column.column_comment}}" prop="{{column.column_name}}">
+        <el-cascader
+          v-model="formData.{{column.column_name}}"
+          :options="optionData.{{column.column_name}}"
+          :props="{
+            label: '{{column.query_options.field_label|default('label')}}',
+            value: '{{column.query_options.field_value|default('value')}}',
+            checkStrictly: {{column.query_options.check_strictly|default('false')}}
+          }"
+          placeholder="请选择{{column.column_comment}}"
+          clearable
+        />
+      </el-form-item>
+    </el-col>
+{% endif %}
+{% if column.query_component == 'date' and column.query_type == 'between' %}
+{% if column.query_options.mode == 'datetime' %}
+    <el-col v-bind="setSpan({{column.query_span|default(12)}})"{% if index > 3 %} v-show="isExpanded"{% endif %}>
+      <el-form-item label="{{column.column_comment}}" prop="{{column.column_name}}">
+        <el-date-picker
+          v-model="formData.{{column.column_name}}"
+          type="datetimerange"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="YYYY-MM-DD HH:mm:ss"
+          clearable
+        />
+      </el-form-item>
+    </el-col>
+{% else %}
+    <el-col v-bind="setSpan({{column.query_span|default(6)}})"{% if index > 3 %} v-show="isExpanded"{% endif %}>
+      <el-form-item label="{{column.column_comment}}" prop="{{column.column_name}}">
+        <el-date-picker
+          v-model="formData.{{column.column_name}}"
+          type="daterange"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="YYYY-MM-DD"
+          clearable
+        />
+      </el-form-item>
+    </el-col>
+{% endif %}
+{% endif %}
+{% if column.query_component == 'date' and column.query_type != 'between' %}
+    <el-col v-bind="setSpan({{column.query_span|default(6)}})"{% if index > 3 %} v-show="isExpanded"{% endif %}>
+      <el-form-item label="{{column.column_comment}}" prop="{{column.column_name}}">
+        <el-date-picker
+          v-model="formData.{{column.column_name}}"
+          type="{{column.query_options.mode|default('date')}}"
+          placeholder="请选择{{column.column_comment}}"
+          value-format="{% if column.query_options.mode == 'datetime' %}YYYY-MM-DD HH:mm:ss{% elseif column.query_options.mode == 'month' %}YYYY-MM{% elseif column.query_options.mode == 'year' %}YYYY{% else %}YYYY-MM-DD{% endif %}"
+          clearable
+        />
+      </el-form-item>
+    </el-col>
+{% endif %}
+{% endif %}
+{% endfor %}
+  </sa-search-bar>
+</template>
+
+<script setup lang="ts">
+  import commonApi from '@/api/common'
+
+  interface Props {
+    modelValue: Record<string, any>
+  }
+  interface Emits {
+    (e: 'update:modelValue', value: Record<string, any>): void
+    (e: 'search', params: Record<string, any>): void
+    (e: 'reset'): void
+  }
+  const props = defineProps<Props>()
+  const emit = defineEmits<Emits>()
+
+  // 展开/收起
+  const isExpanded = ref<boolean>(false)
+
+  // 表单数据双向绑定
+  const searchBarRef = ref()
+  const formData = computed({
+    get: () => props.modelValue,
+    set: (val) => emit('update:modelValue', val)
+  })
+
+  // 选项数据
+  const optionData = reactive({
+{% for column in columns %}
+{% if column.is_query == 2 %}
+{% if column.query_options.url and (column.query_component == 'select' or column.query_component == 'treeSelect' or column.query_component == 'cascader') %}
+    {{column.column_name}}: <any[]>[],
+{% endif %}
+{% endif %}
+{% endfor %}
+  })
+
+  // 初始化选项数据
+  const initOptions = async () => {
+{% for column in columns %}
+{% if column.is_query == 2 %}
+{% if column.query_options.url and (column.query_component == 'select' or column.view_type == 'treeSelect' or column.view_type == 'cascader') %}
+    const resp_{{column.column_name}} = await commonApi.get('{{column.query_options.url}}')
+    optionData.{{column.column_name}} = resp_{{column.column_name}}
+{% endif %}
+{% endif %}
+{% endfor %}
+  }
+
+  // 组件挂载时初始化选项数据
+  onMounted(() => {
+    initOptions()
+  })
+
+  // 重置
+  function handleReset() {
+    searchBarRef.value?.ref.resetFields()
+    emit('reset')
+  }
+
+  // 搜索
+  async function handleSearch() {
+    emit('search', formData.value)
+  }
+
+  // 展开/收起
+  function handleExpand(expanded: boolean) {
+    isExpanded.value = expanded
+  }
+
+  // 栅格占据的列数
+  const setSpan = (span: number) => {
+    return {
+      span: span,
+      xs: 24, // 手机：满宽显示
+      sm: span >= 12 ? span : 12, // 平板：大于等于12保持，否则用半宽
+      md: span >= 8 ? span : 8, // 中等屏幕：大于等于8保持，否则用三分之一宽
+      lg: span,
+      xl: span
+    }
+  }
+</script>

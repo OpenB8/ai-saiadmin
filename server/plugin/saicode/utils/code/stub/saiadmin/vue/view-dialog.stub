@@ -1,0 +1,136 @@
+<template>
+  <el-drawer v-model="visible" size="70%" title="查看详情" :footer="false">
+    <!-- 详情 start -->
+    <div>
+      <el-descriptions :column="1" label-width="100px" border>
+{% for column in form_columns %}
+{% if column.is_edit == 2 %}
+{% if column.view_type == 'saSelect' or column.view_type == 'radio' or column.view_type == 'checkbox' %}
+        <el-descriptions-item label="{{column.column_comment}}">
+          <sa-dict :value="formData?.{{column.column_name}}" dict="{{column.dict_type}}" render="span" />
+        </el-descriptions-item>
+{% elseif column.view_type == 'editor' %}
+        <el-descriptions-item label="{{column.column_comment}}">
+          <div v-html="formData?.{{column.column_name}}"></div>
+        </el-descriptions-item>
+{% elseif column.view_type == 'uploadImage' or column.view_type == 'imagePicker' %}
+        <el-descriptions-item label="{{column.column_comment}}">
+{% if column.options.multiple == true %}
+          <div class="flex flex-column">
+            <img v-for="(item, index) in formData?.{{column.column_name}}" :src="item" :key="index" style="width: 200px" />
+          </div>
+{% else %}
+          <img :src="formData?.{{column.column_name}}" style="width: 200px" />
+{% endif %}
+        </el-descriptions-item>
+{% else %}
+        <el-descriptions-item label="{{column.column_comment}}">
+          <div v-text="formData?.{% if column.table_field %}{{column.table_field}}{% else %}{{column.column_name}}{% endif %}"></div>
+        </el-descriptions-item>
+{% endif %}
+{% endif %}
+{% endfor %}
+      </el-descriptions>
+    </div>
+    <!-- 详情 end -->
+  </el-drawer>
+</template>
+
+<script setup lang="ts">
+  import api from '../../../api/{{package_name}}/{{business_name}}'
+
+  interface Props {
+    modelValue: boolean
+    dialogType: string
+    data?: Record<string, any>
+  }
+
+  interface Emits {
+    (e: 'update:modelValue', value: boolean): void
+    (e: 'success'): void
+  }
+
+  const props = withDefaults(defineProps<Props>(), {
+    modelValue: false,
+    dialogType: 'view',
+    data: undefined
+  })
+
+  const emit = defineEmits<Emits>()
+
+  /**
+   * 弹窗显示状态双向绑定
+   */
+  const visible = computed({
+    get: () => props.modelValue,
+    set: (value) => emit('update:modelValue', value)
+  })
+
+  /**
+   * 初始数据
+   */
+  const initialFormData = {
+{% for column in form_columns %}
+{% if column.is_pk == 2 %}
+    {{column.column_name}}: null,
+{% elseif column.is_insert == 2 or column.is_list == 2 %}
+{% if column.column_type == 'int' or column.column_type == 'smallint' or column.column_type == 'tinyint' %}
+    {{column.column_name}}: {{column.default_value | parseNumber}},
+{% elseif column.view_type == 'inputTag' or column.view_type == 'checkbox' or column.options.limit > 1 %}
+    {{column.column_name}}: [],
+{% elseif column.view_type == 'userSelect' %}
+    {{column.column_name}}: null,
+{% else %}
+    {{column.column_name}}: '{{column.default_value}}',
+{% endif %}
+{% endif %}
+{% endfor %}
+{% for item in options.relations %}
+    {{item.name}}: {} as any,
+{% endfor %}
+  }
+
+  /**
+   * 表单数据
+   */
+  const formData = reactive({ ...initialFormData })
+
+  /**
+   * 监听弹窗打开，初始化表单数据
+   */
+  watch(
+    () => props.modelValue,
+    (newVal) => {
+      if (newVal) {
+        initPage()
+      }
+    }
+  )
+
+  /**
+   * 初始化页面数据
+   */
+  const initPage = async () => {
+    // 先重置为初始值
+    Object.assign(formData, initialFormData)
+    // 如果有数据，则填充数据
+    if (props.data) {
+      await nextTick()
+      initForm()
+    }
+  }
+
+  /**
+   * 初始化表单数据
+   */
+  const initForm = async () => {
+    if (props.data && props.data.id) {
+      const data = await api.read(props.data.id)
+      for (const key in formData) {
+        if (data[key] != null && data[key] != undefined) {
+          ;(formData as any)[key] = data[key]
+        }
+      }
+    }
+  }
+</script>
