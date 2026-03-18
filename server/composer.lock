@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "25d1d7cf34fcc0b9c8eee3cab17f0241",
+    "content-hash": "6df207c0cdb97d22bf798da7518a24ac",
     "packages": [
         {
             "name": "brick/math",
@@ -759,6 +759,261 @@
                 "source": "https://github.com/guzzle/uri-template/tree/v1.0.5"
             },
             "time": "2025-08-22T14:27:06+00:00"
+        },
+        {
+            "name": "hyperf/context",
+            "version": "v3.1.63",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/hyperf/context/v3.1.63/hyperf-context-v3.1.63.zip",
+                "reference": "a8cb6d27c5b85b44ce8d1e58d1ccfe1a1831b2f5",
+                "shasum": ""
+            },
+            "require": {
+                "hyperf/engine": "^2.0",
+                "php": ">=8.1"
+            },
+            "suggest": {
+                "swow/psr7-plus": "Required to use RequestContext and ResponseContext"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hyperf\\Context\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A coroutine/application context library.",
+            "homepage": "https://hyperf.io",
+            "keywords": [
+                "Context",
+                "hyperf",
+                "php",
+                "swoole"
+            ],
+            "support": {
+                "docs": "https://hyperf.wiki",
+                "issues": "https://github.com/hyperf/hyperf/issues",
+                "pull-request": "https://github.com/hyperf/hyperf/pulls",
+                "source": "https://github.com/hyperf/hyperf"
+            },
+            "time": "2025-10-30T01:44:44+00:00"
+        },
+        {
+            "name": "hyperf/contract",
+            "version": "v3.1.63",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/hyperf/contract/v3.1.63/hyperf-contract-v3.1.63.zip",
+                "reference": "24d11e962033a1a44468df6318f9a2c2c0b8f99e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hyperf\\Contract\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "The contracts of Hyperf.",
+            "homepage": "https://hyperf.io",
+            "keywords": [
+                "hyperf",
+                "php",
+                "swoole"
+            ],
+            "support": {
+                "docs": "https://hyperf.wiki",
+                "issues": "https://github.com/hyperf/hyperf/issues",
+                "pull-request": "https://github.com/hyperf/hyperf/pulls",
+                "source": "https://github.com/hyperf/hyperf"
+            },
+            "time": "2025-10-30T01:44:44+00:00"
+        },
+        {
+            "name": "hyperf/engine",
+            "version": "v2.15.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/hyperf/engine/v2.15.0/hyperf-engine-v2.15.0.zip",
+                "reference": "15c282e8fcf8596f3400ccd21c32a18a37036b9a",
+                "shasum": ""
+            },
+            "require": {
+                "hyperf/engine-contract": "~1.14.0",
+                "php": ">=8.0"
+            },
+            "conflict": {
+                "ext-swoole": "<5.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "hyperf/guzzle": "^3.0",
+                "hyperf/http-message": "^3.0",
+                "hyperf/laminas-mime": "^3.0",
+                "mockery/mockery": "^1.5",
+                "phpstan/phpstan": "^1.0",
+                "phpunit/phpunit": "^9.4",
+                "swoole/ide-helper": "dev-master"
+            },
+            "suggest": {
+                "ext-sockets": "*",
+                "ext-swoole": ">=5.0",
+                "hyperf/http-message": "Required to use ResponseEmitter.",
+                "psr/http-message": "Required to use WebSocket Frame."
+            },
+            "type": "library",
+            "extra": {
+                "hyperf": {
+                    "config": "Hyperf\\Engine\\ConfigProvider"
+                },
+                "branch-alias": {
+                    "dev-master": "2.15-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Functions.php"
+                ],
+                "psr-4": {
+                    "Hyperf\\Engine\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Coroutine engine provided by swoole.",
+            "keywords": [
+                "engine",
+                "hyperf",
+                "php",
+                "swoole"
+            ],
+            "support": {
+                "issues": "https://github.com/hyperf/engine/issues",
+                "source": "https://github.com/hyperf/engine/tree/v2.15.0"
+            },
+            "time": "2025-11-19T05:52:31+00:00"
+        },
+        {
+            "name": "hyperf/engine-contract",
+            "version": "v1.14.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/hyperf/engine-contract/v1.14.0/hyperf-engine-contract-v1.14.0.zip",
+                "reference": "b6c8ff556fca5d4ffa29fba819fefc5e3572025d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "mockery/mockery": "^1.0",
+                "phpstan/phpstan": "^1.0",
+                "phpunit/phpunit": ">=7.0",
+                "psr/http-message": "^1.0",
+                "swoole/ide-helper": "^4.5"
+            },
+            "suggest": {
+                "psr/http-message": "Required to use WebSocket Frame."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.14-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hyperf\\Engine\\Contract\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Contract for Coroutine Engine",
+            "keywords": [
+                "contract",
+                "coroutine",
+                "engine",
+                "hyperf",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/hyperf/engine-contract/issues",
+                "source": "https://github.com/hyperf/engine-contract/tree/v1.14.0"
+            },
+            "time": "2025-11-18T13:06:54+00:00"
+        },
+        {
+            "name": "hyperf/pimple",
+            "version": "v2.2.2",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/hyperf/pimple/v2.2.2/hyperf-pimple-v2.2.2.zip",
+                "reference": "7bd07745c256b83679471c06ec2a11e901d37277",
+                "shasum": ""
+            },
+            "require": {
+                "hyperf/context": "^3.0",
+                "hyperf/contract": "^3.0",
+                "php": ">=8.0",
+                "pimple/pimple": "^3.3"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "hyperf/support": "^3.0",
+                "mockery/mockery": "^1.3",
+                "phpstan/phpstan": "^1.0",
+                "phpunit/phpunit": ">=7.0"
+            },
+            "type": "library",
+            "extra": {
+                "hyperf": {
+                    "config": "Hyperf\\Pimple\\ConfigProvider"
+                },
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hyperf\\Pimple\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Pimple Container",
+            "keywords": [
+                "container",
+                "hyperf",
+                "php",
+                "psr11"
+            ],
+            "support": {
+                "issues": "https://github.com/hyperf-cloud/pimple-integration/issues",
+                "source": "https://github.com/hyperf-cloud/pimple-integration/tree/v2.2.2"
+            },
+            "time": "2023-06-10T04:41:29+00:00"
         },
         {
             "name": "illuminate/bus",
@@ -2778,6 +3033,53 @@
                 "source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.2"
             },
             "time": "2026-01-25T14:56:51+00:00"
+        },
+        {
+            "name": "pimple/pimple",
+            "version": "v3.6.2",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/pimple/pimple/v3.6.2/pimple-pimple-v3.6.2.zip",
+                "reference": "8cfe7f74ac22a433d303914eba9ea4c2a834edce",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "psr/container": "^1.1 || ^2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Pimple": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Pimple, a simple Dependency Injection Container",
+            "homepage": "https://pimple.symfony.com",
+            "keywords": [
+                "container",
+                "dependency injection"
+            ],
+            "support": {
+                "source": "https://github.com/silexphp/Pimple/tree/v3.6.2"
+            },
+            "time": "2026-02-26T08:23:44+00:00"
         },
         {
             "name": "psr/cache",
@@ -6350,6 +6652,196 @@
                 "wiki": "https://www.workerman.net/doc/workerman/"
             },
             "time": "2026-01-09T03:26:15+00:00"
+        },
+        {
+            "name": "yansongda/artful",
+            "version": "v1.1.3",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/yansongda/artful/v1.1.3/yansongda-artful-v1.1.3.zip",
+                "reference": "ddc203ef34ab369a5a31df057a0fda697d3ed855",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/psr7": "^2.6",
+                "php": ">=8.0",
+                "psr/container": "^1.1 || ^2.0",
+                "psr/event-dispatcher": "^1.0",
+                "psr/http-client": "^1.0",
+                "psr/http-message": "^1.1 || ^2.0",
+                "psr/log": "^1.1 || ^2.0 || ^3.0",
+                "yansongda/supports": "~4.0.10"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.44",
+                "guzzlehttp/guzzle": "^7.0",
+                "hyperf/pimple": "^2.2",
+                "mockery/mockery": "^1.4",
+                "monolog/monolog": "^2.2",
+                "phpstan/phpstan": "^1.0.0 || ^2.0.0",
+                "phpunit/phpunit": "^9.0",
+                "symfony/event-dispatcher": "^5.2.0",
+                "symfony/http-foundation": "^5.2.0",
+                "symfony/psr-http-message-bridge": "^2.1",
+                "symfony/var-dumper": "^5.1"
+            },
+            "suggest": {
+                "hyperf/pimple": "其它/无框架下使用 SDK，请安装，任选其一",
+                "illuminate/container": "其它/无框架下使用 SDK，请安装，任选其一"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Functions.php"
+                ],
+                "psr-4": {
+                    "Yansongda\\Artful\\": "src"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "yansongda",
+                    "email": "me@yansongda.cn"
+                }
+            ],
+            "description": "Artful 是一个简单易用的 API 请求框架 PHP Api RequesT Framwork U Like。",
+            "keywords": [
+                "api",
+                "artful",
+                "framework",
+                "request"
+            ],
+            "support": {
+                "homepage": "https://artful.yansongda.cn",
+                "issues": "https://github.com/yansongda/artful/issues",
+                "source": "https://github.com/yansongda/artful"
+            },
+            "time": "2025-07-24T09:39:17+00:00"
+        },
+        {
+            "name": "yansongda/pay",
+            "version": "v3.7.19",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/yansongda/pay/v3.7.19/yansongda-pay-v3.7.19.zip",
+                "reference": "57eaeff84bd4a19c4d09656a3c45250c9a032aa2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "ext-json": "*",
+                "ext-libxml": "*",
+                "ext-openssl": "*",
+                "ext-simplexml": "*",
+                "php": ">=8.0",
+                "yansongda/artful": "~1.1.3",
+                "yansongda/supports": "~4.0.10"
+            },
+            "conflict": {
+                "hyperf/framework": "<3.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.44",
+                "guzzlehttp/guzzle": "^7.0",
+                "hyperf/pimple": "^2.2",
+                "jetbrains/phpstorm-attributes": "^1.1",
+                "mockery/mockery": "^1.4",
+                "monolog/monolog": "^2.2",
+                "phpstan/phpstan": "^1.0.0 || ^2.0.0",
+                "phpunit/phpunit": "^9.0",
+                "symfony/event-dispatcher": "^5.2.0",
+                "symfony/http-foundation": "^5.2.0",
+                "symfony/psr-http-message-bridge": "^2.1",
+                "symfony/var-dumper": "^5.1"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Functions.php"
+                ],
+                "psr-4": {
+                    "Yansongda\\Pay\\": "src"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "yansongda",
+                    "email": "me@yansongda.cn"
+                }
+            ],
+            "description": "可能是我用过的最优雅的 Alipay 和 WeChat 的支付 SDK 扩展包了",
+            "keywords": [
+                "alipay",
+                "pay",
+                "wechat"
+            ],
+            "support": {
+                "homepage": "https://pay.yansongda.cn",
+                "issues": "https://github.com/yansongda/pay/issues",
+                "source": "https://github.com/yansongda/pay"
+            },
+            "time": "2025-12-22T03:30:53+00:00"
+        },
+        {
+            "name": "yansongda/supports",
+            "version": "v4.0.12",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/yansongda/supports/v4.0.12/yansongda-supports-v4.0.12.zip",
+                "reference": "308de376d20cb1cd4f959644793e0582ccd1ef6d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "ext-mbstring": "*",
+                "php": ">=8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "mockery/mockery": "^1.4",
+                "phpstan/phpstan": "^1.1.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "suggest": {
+                "monolog/monolog": "Use logger",
+                "symfony/console": "Use stdout logger"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Functions.php"
+                ],
+                "psr-4": {
+                    "Yansongda\\Supports\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "yansongda",
+                    "email": "me@yansongda.cn"
+                }
+            ],
+            "description": "common components",
+            "keywords": [
+                "array",
+                "collection",
+                "config",
+                "support"
+            ],
+            "support": {
+                "issues": "https://github.com/yansongda/supports/issues",
+                "source": "https://github.com/yansongda/supports"
+            },
+            "time": "2025-01-08T08:55:20+00:00"
         },
         {
             "name": "zoujingli/ip2region",

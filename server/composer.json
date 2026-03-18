@@ -31,7 +31,9 @@
         "saithink/saipackage": "^6.0",
         "luoyue/webman-mcp": "^0.4.0",
         "symfony/uid": "^7.4",
-        "overtrue/easy-sms": "*"
+        "overtrue/easy-sms": "*",
+        "yansongda/pay": "~3.7.0",
+        "hyperf/pimple": "*"
     },
     "suggest": {
         "ext-event": "For better performance. "
