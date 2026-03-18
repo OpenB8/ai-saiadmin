@@ -34,7 +34,13 @@
         "overtrue/easy-sms": "*",
         "yansongda/pay": "~3.7.0",
         "hyperf/pimple": "*",
-        "w7corp/easywechat": "^6.18"
+        "w7corp/easywechat": "^6.18",
+        "symfony/ai-agent": "^0.2.0",
+        "symfony/ai-platform": "^0.2.0",
+        "symfony/ai-gemini-platform": "^0.2.0",
+        "symfony/ai-open-ai-platform": "^0.2.0",
+        "symfony/ai-deep-seek-platform": "^0.2.0",
+        "symfony/ai-generic-platform": "^0.2.0"
     },
     "suggest": {
         "ext-event": "For better performance. "
