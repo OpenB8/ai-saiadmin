@@ -33,6 +33,9 @@
         @pagination:size-change="handleSizeChange"
         @pagination:current-change="handleCurrentChange"
       >
+        <template #data_scope="{ row }">
+          {{ scopeList.find((item) => item.value === row.data_scope)?.label || '-' }}
+        </template>
         <template #operation="{ row }">
           <div class="flex gap-2" v-if="row.id !== 1">
             <SaButton
@@ -61,6 +64,15 @@
                       <span>菜单权限</span>
                     </div>
                   </ElDropdownItem>
+                  <ElDropdownItem
+                    v-permission="'core:role:data'"
+                    @click="showDataDialog('edit', row)"
+                  >
+                    <div class="flex-c gap-2">
+                      <ArtSvgIcon icon="ri:shield-keyhole-line" />
+                      <span>数据权限</span>
+                    </div>
+                  </ElDropdownItem>
                 </ElDropdownMenu>
               </template>
             </ElDropdown>
@@ -84,6 +96,14 @@
       :data="permissionDialogData"
       @success="refreshData"
     />
+
+    <!-- 数据权限弹窗 -->
+    <DataDialog
+      v-model="dataDialogVisible"
+      :dialog-type="dataDialogType"
+      :data="dataDialogData"
+      @success="refreshData"
+    />
   </div>
 </template>
 
@@ -94,6 +114,15 @@
   import TableSearch from './modules/table-search.vue'
   import EditDialog from './modules/edit-dialog.vue'
   import PermissionDialog from './modules/permission-dialog.vue'
+  import DataDialog from './modules/data-dialog.vue'
+
+  const scopeList = [
+    { value: 1, label: '全部数据权限' },
+    { value: 2, label: '自定义数据权限' },
+    { value: 3, label: '本部门数据权限' },
+    { value: 4, label: '本部门及以下数据权限' },
+    { value: 5, label: '本人数据权限' }
+  ]
 
   // 搜索表单
   const searchForm = ref({
@@ -130,6 +159,7 @@
         { prop: 'name', label: '角色名称', minWidth: 120 },
         { prop: 'code', label: '角色编码', minWidth: 120 },
         { prop: 'level', label: '角色级别', minWidth: 100, sortable: true },
+        { prop: 'data_scope', label: '数据权限', minWidth: 140, useSlot: true },
         { prop: 'remark', label: '角色描述', minWidth: 150, showOverflowTooltip: true },
         { prop: 'sort', label: '排序', minWidth: 100 },
         { prop: 'status', label: '状态', saiType: 'dict', saiDict: 'data_status' },
@@ -148,5 +178,13 @@
     dialogVisible: permissionDialogVisible,
     dialogData: permissionDialogData,
     showDialog: showPermissionDialog
+  } = useSaiAdmin()
+
+  // 数据权限配置
+  const {
+    dialogType: dataDialogType,
+    dialogVisible: dataDialogVisible,
+    dialogData: dataDialogData,
+    showDialog: showDataDialog
   } = useSaiAdmin()
 </script>

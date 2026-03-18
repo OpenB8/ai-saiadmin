@@ -6,6 +6,7 @@
 // +----------------------------------------------------------------------
 namespace plugin\saiadmin\app\logic\system;
 
+use plugin\saiadmin\app\cache\UserInfoCache;
 use plugin\saiadmin\app\cache\UserMenuCache;
 use plugin\saiadmin\app\model\system\SystemRole;
 use plugin\saiadmin\basic\think\BaseLogic;
@@ -149,6 +150,48 @@ class SystemRoleLogic extends BaseLogic
             $tag = $cache['role'] . $id;
             Cache::tag($tag)->clear();       // 清理权限缓存-角色TAG
             UserMenuCache::clearMenuCache(); // 清理菜单缓存
+            return true;
+        });
+    }
+
+    /**
+     * 根据角色获取数据权限部门
+     */
+    public function getDeptByRole($id): array
+    {
+        $role = $this->model->findOrEmpty($id);
+        $depts = $role->depts ?: [];
+
+        return [
+            'id' => $id,
+            'depts' => $depts,
+        ];
+    }
+
+    /**
+     * 保存数据权限
+     */
+    public function saveDeptPermission($id, $data): mixed
+    {
+        return $this->transaction(function () use ($id, $data) {
+            $role = $this->model->findOrEmpty($id);
+            if ($role->isEmpty()) {
+                throw new ApiException('数据不存在');
+            }
+
+            $dataScope = (int) ($data['data_scope'] ?? self::ALL_SCOPE);
+            $deptIds = $data['dept_ids'] ?? [];
+            $deptIds = is_array($deptIds) ? array_values(array_filter($deptIds)) : [$deptIds];
+
+            $role->data_scope = $dataScope;
+            $result = $role->save();
+            $role->depts()->detach();
+
+            if ($result && $dataScope === self::CUSTOM_SCOPE && !empty($deptIds)) {
+                $role->depts()->saveAll($deptIds);
+            }
+
+            UserInfoCache::clearUserInfoByRoleId($id);
             return true;
         });
     }

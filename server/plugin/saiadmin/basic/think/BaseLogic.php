@@ -7,6 +7,7 @@
 namespace plugin\saiadmin\basic\think;
 
 use support\think\Db;
+use plugin\saiadmin\app\cache\UserInfoCache;
 use plugin\saiadmin\basic\AbstractLogic;
 use plugin\saiadmin\exception\ApiException;
 
@@ -15,6 +16,95 @@ use plugin\saiadmin\exception\ApiException;
  */
 class BaseLogic extends AbstractLogic
 {
+    /**
+     * 是否启用数据权限
+     */
+    protected bool $scope = false;
+
+    /**
+     * 当前数据权限命中的用户ID
+     */
+    public array $userIds = [];
+
+    /**
+     * 全部数据权限
+     */
+    public const ALL_SCOPE = 1;
+
+    /**
+     * 自定义数据权限
+     */
+    public const CUSTOM_SCOPE = 2;
+
+    /**
+     * 本部门数据权限
+     */
+    public const SELF_DEPT_SCOPE = 3;
+
+    /**
+     * 本部门及以下数据权限
+     */
+    public const DEPT_BELOW_SCOPE = 4;
+
+    /**
+     * 本人数据权限
+     */
+    public const SELF_SCOPE = 5;
+
+    /**
+     * 数据权限处理
+     * 约定基于 created_by 字段做行级过滤。
+     */
+    public function userDataScope($query): mixed
+    {
+        $info = getCurrentInfo();
+        if (!$info) {
+            throw new ApiException('数据权限验证失败');
+        }
+
+        $this->adminInfo = UserInfoCache::getUserInfo($info['id']);
+        $dataScope = self::ALL_SCOPE;
+        $roleId = 1;
+
+        foreach ($this->adminInfo['roleList'] as $role) {
+            if ($role['data_scope'] > $dataScope) {
+                $dataScope = $role['data_scope'];
+                $roleId = $role['id'];
+            }
+        }
+
+        switch ($dataScope) {
+            case self::ALL_SCOPE:
+                return $query;
+            case self::CUSTOM_SCOPE:
+                $deptIds = Db::table('sa_system_role_dept')->where('role_id', $roleId)->column('dept_id');
+                $userIds = Db::table('sa_system_user')->where('dept_id', 'in', $deptIds)->column('id');
+                $this->userIds = array_merge($this->userIds, $userIds);
+                break;
+            case self::SELF_DEPT_SCOPE:
+                $deptId = $this->adminInfo['dept_id'];
+                $userIds = Db::table('sa_system_user')->where('dept_id', $deptId)->column('id');
+                $this->userIds = array_merge($this->userIds, $userIds);
+                break;
+            case self::DEPT_BELOW_SCOPE:
+                $deptId = $this->adminInfo['dept_id'];
+                $deptInfo = $this->adminInfo['deptList'];
+                $oldLevel = $deptInfo['level'] . $deptId . ',';
+                $deptIds = Db::table('sa_system_dept')->where('level', 'like', $oldLevel . '%')->column('id');
+                $deptIds[] = $deptId;
+                $userIds = Db::table('sa_system_user')->where('dept_id', 'in', $deptIds)->column('id');
+                $this->userIds = array_merge($this->userIds, $userIds);
+                break;
+            case self::SELF_SCOPE:
+                $this->userIds = array_merge($this->userIds, [$this->adminInfo['id']]);
+                break;
+            default:
+                break;
+        }
+
+        return $query->where('created_by', 'in', array_unique($this->userIds));
+    }
+
     /**
      * 数据库事务操作
      * @param callable $closure
@@ -45,7 +135,12 @@ class BaseLogic extends AbstractLogic
      */
     public function edit($id, array $data): mixed
     {
-        $model = $this->model->findOrEmpty($id);
+        $query = $this->model->newQuery();
+        if ($this->scope) {
+            $query = $this->userDataScope($query);
+        }
+
+        $model = $query->findOrEmpty($id);
         if ($model->isEmpty()) {
             throw new ApiException('数据不存在');
         }
@@ -59,7 +154,12 @@ class BaseLogic extends AbstractLogic
      */
     public function read($id): mixed
     {
-        $model = $this->model->findOrEmpty($id);
+        $query = $this->model->newQuery();
+        if ($this->scope) {
+            $query = $this->userDataScope($query);
+        }
+
+        $model = $query->findOrEmpty($id);
         if ($model->isEmpty()) {
             throw new ApiException('数据不存在');
         }
@@ -73,7 +173,12 @@ class BaseLogic extends AbstractLogic
      */
     public function destroy($ids): bool
     {
-        return $this->model->destroy($ids);
+        return $this->model->destroy(function ($query) use ($ids) {
+            if ($this->scope) {
+                $query = $this->userDataScope($query);
+            }
+            $query->whereIn($this->model->getPk(), $ids);
+        });
     }
 
     /**
@@ -108,6 +213,10 @@ class BaseLogic extends AbstractLogic
         $orderField = $request ? $request->input('orderField', '') : '';
         $orderType = $request ? $request->input('orderType', $this->orderType) : $this->orderType;
 
+        if ($this->scope) {
+            $query = $this->userDataScope($query);
+        }
+
         if (empty($orderField)) {
             $orderField = $this->orderField !== '' ? $this->orderField : $this->model->getPk();
         }
@@ -131,6 +240,10 @@ class BaseLogic extends AbstractLogic
         $request = request();
         $orderField = $request ? $request->input('orderField', '') : '';
         $orderType = $request ? $request->input('orderType', $this->orderType) : $this->orderType;
+
+        if ($this->scope) {
+            $query = $this->userDataScope($query);
+        }
 
         if (empty($orderField)) {
             $orderField = $this->orderField !== '' ? $this->orderField : $this->model->getPk();

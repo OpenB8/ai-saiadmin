@@ -6,10 +6,7 @@
 // +----------------------------------------------------------------------
 namespace plugin\saiadmin\app\controller\system;
 
-use plugin\saiadmin\app\model\system\SystemUserRole;
 use plugin\saiadmin\basic\BaseController;
-use plugin\saiadmin\app\cache\UserInfoCache;
-use plugin\saiadmin\app\model\system\SystemUser;
 use plugin\saiadmin\app\validate\system\SystemRoleValidate;
 use plugin\saiadmin\app\logic\system\SystemRoleLogic;
 use plugin\saiadmin\service\Permission;
@@ -150,6 +147,29 @@ class SystemRoleController extends BaseController
         $id = $request->post('id');
         $menu_ids = $request->post('menu_ids');
         $this->logic->saveMenuPermission($id, $menu_ids);
+        return $this->success('操作成功');
+    }
+
+    /**
+     * 获取角色数据权限部门
+     */
+    #[Permission('角色数据权限', 'core:role:data')]
+    public function getDeptByRole(Request $request): Response
+    {
+        $id = $request->get('id');
+        $data = $this->logic->getDeptByRole($id);
+        return $this->success($data);
+    }
+
+    /**
+     * 保存角色数据权限
+     */
+    #[Permission('角色数据权限', 'core:role:data')]
+    public function dataPermission(Request $request): Response
+    {
+        $id = $request->post('id');
+        $data = $request->post();
+        $this->logic->saveDeptPermission($id, $data);
         return $this->success('操作成功');
     }
 

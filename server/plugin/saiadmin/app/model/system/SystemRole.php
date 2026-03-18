@@ -17,7 +17,7 @@ use plugin\saiadmin\basic\think\BaseModel;
  * @property  $name 角色名称
  * @property  $code 角色标识，如: hr_manager
  * @property  $level 角色级别：用于行政控制，不可操作级别大于自己的角色
- * @property  $data_scope 数据范围: 1全部, 2本部门及下属, 3本部门, 4仅本人, 5自定义
+ * @property  $data_scope 数据范围: 1全部, 2自定义, 3本部门, 4本部门及以下, 5仅本人
  * @property  $remark 备注
  * @property  $sort 
  * @property  $status 状态: 1启用, 0禁用

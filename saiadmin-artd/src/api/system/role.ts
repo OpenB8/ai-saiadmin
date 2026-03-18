@@ -103,7 +103,7 @@ export default {
    * @returns 数据列表
    */
   deptByRole(params: Record<string, any>) {
-    return request.get<Api.Common.ApiData[]>({
+    return request.get<Api.Common.ApiData>({
       url: '/core/role/getDeptByRole',
       params
     })

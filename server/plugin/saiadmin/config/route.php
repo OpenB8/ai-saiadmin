@@ -41,7 +41,9 @@ Route::group('/core', function () {
     fastRoute('role', \plugin\saiadmin\app\controller\system\SystemRoleController::class);
     Route::get("/role/accessRole", [\plugin\saiadmin\app\controller\system\SystemRoleController::class, 'accessRole']);
     Route::get("/role/getMenuByRole", [\plugin\saiadmin\app\controller\system\SystemRoleController::class, 'getMenuByRole']);
+    Route::get("/role/getDeptByRole", [\plugin\saiadmin\app\controller\system\SystemRoleController::class, 'getDeptByRole']);
     Route::post("/role/menuPermission", [\plugin\saiadmin\app\controller\system\SystemRoleController::class, 'menuPermission']);
+    Route::post("/role/dataPermission", [\plugin\saiadmin\app\controller\system\SystemRoleController::class, 'dataPermission']);
 
     // 部门管理
     fastRoute("dept", \plugin\saiadmin\app\controller\system\SystemDeptController::class);

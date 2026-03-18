@@ -412,6 +412,7 @@ INSERT INTO `sa_system_menu` VALUES (36, 6, '修改', '', 'core:role:update', 3,
 INSERT INTO `sa_system_menu` VALUES (37, 6, '读取', '', 'core:role:read', 3, '', '', NULL, '', 100, '', 2, 2, 2, 2, 2, 0, NULL, 1, NULL, 1, 1, '2026-01-01 00:00:00', '2026-01-01 00:00:00', NULL);
 INSERT INTO `sa_system_menu` VALUES (38, 6, '删除', '', 'core:role:destroy', 3, '', '', NULL, '', 100, '', 2, 2, 2, 2, 2, 0, NULL, 1, NULL, 1, 1, '2026-01-01 00:00:00', '2026-01-01 00:00:00', NULL);
 INSERT INTO `sa_system_menu` VALUES (39, 6, '菜单权限', '', 'core:role:menu', 3, '', '', NULL, '', 100, '', 2, 2, 2, 2, 2, 0, NULL, 1, NULL, 1, 1, '2026-01-01 00:00:00', '2026-01-01 00:00:00', NULL);
+INSERT INTO `sa_system_menu` VALUES (40, 6, '数据权限', '', 'core:role:data', 3, '', '', NULL, '', 100, '', 2, 2, 2, 2, 2, 0, NULL, 1, NULL, 1, 1, '2026-01-01 00:00:00', '2026-01-01 00:00:00', NULL);
 INSERT INTO `sa_system_menu` VALUES (41, 7, '数据列表', '', 'core:post:index', 3, '', '', NULL, '', 100, '', 2, 2, 2, 2, 2, 0, NULL, 1, NULL, 1, 1, '2026-01-01 00:00:00', '2026-01-01 00:00:00', NULL);
 INSERT INTO `sa_system_menu` VALUES (42, 7, '添加', '', 'core:post:save', 3, '', '', NULL, '', 100, '', 2, 2, 2, 2, 2, 0, NULL, 1, NULL, 1, 1, '2026-01-01 00:00:00', '2026-01-01 00:00:00', NULL);
 INSERT INTO `sa_system_menu` VALUES (43, 7, '修改', '', 'core:post:update', 3, '', '', NULL, '', 100, '', 2, 2, 2, 2, 2, 0, NULL, 1, NULL, 1, 1, '2026-01-01 00:00:00', '2026-01-01 00:00:00', NULL);
@@ -518,7 +519,7 @@ CREATE TABLE `sa_system_role`  (
   `name` varchar(64) NOT NULL COMMENT '角色名称',
   `code` varchar(64) NOT NULL COMMENT '角色标识(英文唯一)，如: hr_manager',
   `level` int(11) NULL DEFAULT 1 COMMENT '角色级别(1-100)：用于行政控制，不可操作级别>=自己的角色',
-  `data_scope` tinyint(4) NULL DEFAULT 1 COMMENT '数据范围: 1全部, 2本部门及下属, 3本部门, 4仅本人, 5自定义',
+  `data_scope` tinyint(4) NULL DEFAULT 1 COMMENT '数据范围: 1全部, 2自定义, 3本部门, 4本部门及以下, 5仅本人',
   `remark` varchar(255) NULL DEFAULT NULL COMMENT '备注',
   `sort` int(11) NULL DEFAULT 100,
   `status` tinyint(1) NULL DEFAULT 1 COMMENT '状态: 1启用, 0禁用',
