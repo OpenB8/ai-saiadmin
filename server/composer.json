@@ -33,7 +33,7 @@
         "symfony/uid": "^7.4",
         "overtrue/easy-sms": "*",
         "yansongda/pay": "~3.7.0",
-        "hyperf/pimple": "*",
+        "hyperf/pimple": "^2.2",
         "w7corp/easywechat": "^6.18",
         "symfony/ai-agent": "^0.2.0",
         "symfony/ai-platform": "^0.2.0",
